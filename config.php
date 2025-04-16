@@ -3,7 +3,7 @@
 		// sinu andmed
 		$db_server = 'localhost';
 		$db_andmebaas = 'sport';
-		$db_kasutaja = 'kspar';
+		$db_kasutaja = 'kaspar';
 		$db_salasona = 'Passw0rd';
 
 		// ühendus
