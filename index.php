@@ -31,7 +31,7 @@
         $gender = $_GET["gender"];
         $category = $_GET["category"];
 
-        $muuda_paring="UPDATE sport2025 SET fullname= '".$fullname."', email='".$email."', age='".$age."', gender='".$gender."', category='".$category."' WHERE id ".$id."";
+        $muuda_paring="UPDATE sport2025 SET fullname= '".$fullname."', email='".$email."', age='".$age."', gender='".$gender."', category='".$category."' WHERE id = ".$id."";
         $saada_paring = mysqli_query($yhendus, $muuda_paring);
         $tulemus = mysqli_affected_rows($yhendus);
         
