@@ -12,27 +12,75 @@
   <div class="container">
     <h1>HKHK spordipäev 2025!</h1>
 
+    <?php
+
+      // MUUDA PÄRING
+
+      if(isset($_GET["muuda"]) && isset($_GET["id"])){
+        $id = $_GET["id"];
+        $kuvaparing = "SELECT * FROM sport2025 WHERE id=".$id."";
+        $saadetud_paring = mysqli_query($yhendus, $kuvaparing);
+        $rida = mysqli_fetch_assoc($saadetud_paring);
+        var_dump($rida);
+        // $muuda_paring="UPDATE sport2025 SET fullname = 'Tommy Welbssanddd', email='uus@sadf.ee',age='11',gender='apach',category='uisutamine' WHERE id = 3;"
+      }
+
+    ?>
+
+        <!-- sisestus VORM -->
+
     <form action="index.php" method="get">
-      Nimi: <input type="text" name="fullname" required><br>
+      Nimi: <input type="text" name="fullname" required value="<?php echo $rida['fullname']; ?>"><br>
       E-mail: <input type="email" name="email" required><br>
       Vanus: <input type="number" name="age" min="16" max="88" step="1" required><br>
-      Sugu: <input type="text" name="gender" limit="5" required><br>
-      Spordiala: <input type="text" name="category" limit="20" required><br>
-      <input type="submit" value="Salvesta" class="btn btn-primary" required><br>
+      Sugu: <input type="text" name="gender" required><br>
+      Spordiala: <input type="text" name="category" required><br>
+      <input type="submit" value="Salvesta" name="salvesta" class="btn btn-primary"><br>
     </form>
+    
     <?php
-      if(isset($_GET["fullname"]) && !empty($_GET["fullname"])){
+
+      if(isset($_GET['msg'])){
+        echo "<div class='alert alert-success'>".$_GET['msg']."</div>";
+      }
+
+      // KUSTUTAMINE
+
+      if(isset($_GET['kustuta']) && isset($_GET['id'])){
+        $id = $_GET['id'];
+        $kparing = "DELETE FROM sport2025 WHERE id=".$id."";
+        $saada_paring = mysqli_query($yhendus, $kparing);
+        $tulemus = mysqli_affected_rows($yhendus);
+        if($tulemus == 1){
+          header('Location: index.php?msg=Rida kustutatud');
+        } else {
+          echo "Kirjet ei lisatud";
+        }
+      }
+
+      // OTSING
+
+      if(isset($_GET["salvesta"]) && !empty($_GET["fullname"])){
+
+        $fullname = $_GET["fullname"];
+        $email = $_GET["email"];
+        $age = $_GET["age"];
+        $gender = $_GET["gender"];
+        $category = $_GET["category"];
+
         $lisa_paring = "INSERT INTO sport2025 (fullname,email,age,gender,category) 
-        VALUES ('Mario vaarikas', 'asdf@sdf.ee', '18', ' mees', 'jooks')";
+        VALUES ('".$fullname."','".$email."', '".$age."', ' ".$gender."', '".$category."')";
 
         $saada_paring = mysqli_query($yhendus, $lisa_paring);
-        $tulemas = mysqli_affected_rows($yhendus);
-        if($tulemas == 1){
+        $tulemus = mysqli_affected_rows($yhendus);
+        if($tulemus == 1){
           echo "Kirje edukalt lisatud";
         } else {
           echo "Kirjet ei lisatud";
         }
       }
+
+
     ?>
 
     <form action="index.php" method="get" class="py-4">
@@ -43,7 +91,11 @@
       </select>
       <input type="submit" value="Otsi...">
     </form>
-
+      <?php
+              if(isset($_GET['msg'])){
+                echo "<div class='alert alert-success'>".$_GET['msg']."</div>";
+              }
+      ?>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -86,8 +138,8 @@
                 echo "<td>".$rida['gender']."</td>";
                 echo "<td>".$rida['category']."</td>";
                 echo "<td>".$rida['reg_time']."</td>";
-                echo "<td><a class='btn btn-success' href=''>Muuda</a></td>";
-                echo "<td><a class='btn btn-danger' href=''>Kustuta</a></td>";
+                echo "<td><a class='btn btn-success' href='?muuda&id=".$rida['id']."'>Muuda</a></td>";
+                echo "<td><a class='btn btn-danger' href='?kustuta&id=".$rida['id']."'>Kustuta</a></td>";
                 echo "</tr>";
 
             }
@@ -98,4 +150,4 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
-</html>
+</html>  
