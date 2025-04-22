@@ -21,21 +21,45 @@
         $kuvaparing = "SELECT * FROM sport2025 WHERE id=".$id."";
         $saadetud_paring = mysqli_query($yhendus, $kuvaparing);
         $rida = mysqli_fetch_assoc($saadetud_paring);
-        var_dump($rida);
-        // $muuda_paring="UPDATE sport2025 SET fullname = 'Tommy Welbssanddd', email='uus@sadf.ee',age='11',gender='apach',category='uisutamine' WHERE id = 3;"
       }
+      if(isset($_GET["salvesta_muudatus"]) && isset($_GET["id"])){
 
+        $id = $_GET["id"];
+        $fullname = $_GET["fullname"];
+        $email = $_GET["email"];
+        $age = $_GET["age"];
+        $gender = $_GET["gender"];
+        $category = $_GET["category"];
+
+        $muuda_paring="UPDATE sport2025 SET fullname= '".$fullname."', email='".$email."', age='".$age."', gender='".$gender."', category='".$category."' WHERE id ".$id."";
+        $saada_paring = mysqli_query($yhendus, $muuda_paring);
+        $tulemus = mysqli_affected_rows($yhendus);
+        
+        if($tulemus == 1){
+          header('Location: index.php?msg=Andmed uuendatud');
+        } else {
+          echo "Andmed pole uuendatud";
+        }
+
+      }
     ?>
 
         <!-- sisestus VORM -->
 
     <form action="index.php" method="get">
-      Nimi: <input type="text" name="fullname" required value="<?php echo $rida['fullname']; ?>"><br>
-      E-mail: <input type="email" name="email" required><br>
-      Vanus: <input type="number" name="age" min="16" max="88" step="1" required><br>
-      Sugu: <input type="text" name="gender" required><br>
-      Spordiala: <input type="text" name="category" required><br>
-      <input type="submit" value="Salvesta" name="salvesta" class="btn btn-primary"><br>
+      <input type="hidden" name="id" value="<?php !empty($rida['id']) ? print_r($rida['id']) : '' ?>">
+      Nimi: <input type="text" name="fullname" required value="<?php !empty($rida['fullname']) ? print_r($rida['fullname']) : '' ?>"><br>
+      E-mail: <input type="email" name="email" required value="<?php !empty($rida['email']) ? print_r($rida['email']) : '' ?>"><br>
+      Vanus: <input type="number" name="age" min="16" max="88" step="1" required value="<?php !empty($rida['age']) ? print_r($rida['age']) : '' ?>"><br>
+      Sugu: <input type="text" name="gender" required value="<?php !empty($rida['gender']) ? print_r($rida['gender']) : '' ?>"><br>
+      Spordiala: <input type="text" name="category" required value="<?php !empty($rida['category']) ? print_r($rida['category']) : '' ?>"><br>
+      
+      <?php if(isset($_GET["muuda"]) && isset($_GET["id"])){ ?>
+        <input type="submit" value="Salvesta_muudatus" name="salvesta_muudatus" class="btn btn-primary"><br>
+      <?php } else { ?>
+        <input type="submit" value="Salvesta" name="salvesta" class="btn btn-primary"><br>
+      <?php } ?>
+      
     </form>
     
     <?php
