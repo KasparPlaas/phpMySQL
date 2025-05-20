@@ -1,127 +1,126 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include 'config.php';
 session_start();
 
-$error = '';
+$veateade = '';
+$registreeritud = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['kasutajanimi'] ?? '');
-    $password = $_POST['parool'] ?? '';
-    $firstname = trim($_POST['eesnimi'] ?? '');
-    $lastname = trim($_POST['perenimi'] ?? '');
-    $gender = $_POST['sugu'] ?? 'mees';
-    $email = trim($_POST['email'] ?? '');
-    $phone = trim($_POST['telefon'] ?? '');
-    $idcode = trim($_POST['isikukood'] ?? '');
-    $agree = isset($_POST['tingimused']);
+    $kasutajanimi = $_POST['kasutajanimi'];
+    $parool = $_POST['parool'];
+    $eesnimi = $_POST['eesnimi'];
+    $perenimi = $_POST['perenimi'];
+    $sugu = $_POST['sugu'];
+    $email = $_POST['email'];
+    $telefon = $_POST['telefon'];
+    $isikukood = $_POST['isikukood'];
+    $noustus = isset($_POST['tingimused']);
 
-    // Check all required fields
-    if (!$username || !$password || !$firstname || !$lastname || !$email || !$phone || !$idcode) {
-        $error = "Kõik väljad on kohustuslikud.";
-    } elseif (!$agree) {
-        $error = "Peate nõustuma kasutustingimustega.";
+    if (
+        empty($kasutajanimi) || empty($parool) || empty($eesnimi) || empty($perenimi) ||
+        empty($email) || empty($telefon) || empty($isikukood)
+    ) {
+        $veateade = "Kõik väljad on kohustuslikud.";
+    } elseif (!$noustus) {
+        $veateade = "Peate nõustuma kasutustingimustega.";
     } else {
-        // Prepare statement to check duplicates
-        $check = $yhendus->prepare("SELECT kasutajanimi FROM kasutajad WHERE kasutajanimi = ? OR email = ? OR isikukood = ?");
-        if (!$check) {
-            $error = "Andmebaasi viga: " . $yhendus->error;
+        $kontroll = mysqli_query($yhendus, "SELECT * FROM kasutajad 
+            WHERE kasutajanimi = '$kasutajanimi' OR email = '$email' OR isikukood = '$isikukood'");
+
+        if (mysqli_num_rows($kontroll) > 0) {
+            $veateade = "Kasutajanimi, e-mail või isikukood on juba kasutusel.";
         } else {
-            $check->bind_param("sss", $username, $email, $idcode);
-            $check->execute();
-            $check->store_result();
+            $krüpteeritudParool = password_hash($parool, PASSWORD_DEFAULT);
+            $roll = 1;
+            $pilt = "default.jpg";
 
-            if ($check->num_rows > 0) {
-                $error = "Kasutajanimi, e-mail või isikukood on juba kasutusel.";
+            $sisesta = "INSERT INTO kasutajad 
+                (kasutajanimi, parool, eesnimi, perenimi, sugu, email, telefon, isikukood, profiilipilt, roll) 
+                VALUES ('$kasutajanimi', '$krüpteeritudParool', '$eesnimi', '$perenimi', '$sugu', '$email', '$telefon', '$isikukood', '$pilt', $roll)";
+
+            if (mysqli_query($yhendus, $sisesta)) {
+                $registreeritud = true;
             } else {
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $role = 1; // kylaline
-                $defaultProfilePic = 'default.jpg';
-
-                $stmt = $yhendus->prepare("INSERT INTO kasutajad 
-                    (kasutajanimi, parool, eesnimi, perenimi, sugu, email, telefon, isikukood, profiilipilt, roll) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                if (!$stmt) {
-                    $error = "Andmebaasi viga: " . $yhendus->error;
-                } else {
-                    $stmt->bind_param("sssssssssi", $username, $hashedPassword, $firstname, $lastname, $gender, $email, $phone, $idcode, $defaultProfilePic, $role);
-
-                    if ($stmt->execute()) {
-                        header("Location: login.php");
-                        exit;
-                    } else {
-                        $error = "Registreerimine ebaõnnestus. Palun proovige uuesti.";
-                    }
-                    $stmt->close();
-                }
+                $veateade = "Registreerimine ebaõnnestus. Proovi uuesti.";
             }
-            $check->close();
         }
     }
 }
 ?>
-
 <?php include 'header.php'; ?>
-<div class="container py-5" style="max-width: 600px;">
-    <h2 class="mb-4">Registreeru kasutajaks</h2>
+<div class="container py-5 d-flex justify-content-center">
+    <div class="card shadow-sm" style="max-width: 600px; width: 100%;">
+        <div class="card-body">
+            <h2 class="mb-4 text-center">Registreeru</h2>
 
-    <?php if ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+            <?php if (!empty($veateade)): ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($veateade) ?></div>
+            <?php endif; ?>
 
-    <form method="POST" novalidate>
-        <div class="form-floating mb-3">
-            <input type="text" name="kasutajanimi" class="form-control" id="kasutajanimi" placeholder="Kasutajanimi" required>
-            <label for="kasutajanimi">Kasutajanimi</label>
+            <?php if (!empty($registreeritud)): ?>
+                <div class="alert alert-success">
+                    Registreerimine õnnestus! <a href="login.php" class="alert-link">Logi sisse</a>.
+                </div>
+            <?php endif; ?>
+
+            <?php if (!$registreeritud): ?>
+                <form method="POST" novalidate>
+                    <h5 class="mb-3">Sisselogimisinfo</h5>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="kasutajanimi" class="form-control" id="kasutajanimi" placeholder="Kasutajanimi" required>
+                        <label for="kasutajanimi">Kasutajanimi</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="password" name="parool" class="form-control" id="parool" placeholder="Parool" required>
+                        <label for="parool">Parool</label>
+                    </div>
+
+                    <h5 class="mb-3">Isiklik info</h5>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="eesnimi" class="form-control" id="eesnimi" placeholder="Eesnimi" required>
+                        <label for="eesnimi">Eesnimi</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="perenimi" class="form-control" id="perenimi" placeholder="Perenimi" required>
+                        <label for="perenimi">Perenimi</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Sugu</label>
+                        <select name="sugu" class="form-select" required>
+                            <option value="mees">Mees</option>
+                            <option value="naine">Naine</option>
+                        </select>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                        <label for="email">Email</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="telefon" class="form-control" id="telefon" placeholder="Telefon" required>
+                        <label for="telefon">Telefon</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="text" name="isikukood" class="form-control" id="isikukood" placeholder="Isikukood" required>
+                        <label for="isikukood">Isikukood</label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input type="checkbox" name="tingimused" class="form-check-input" id="tingimused" required>
+                        <label class="form-check-label" for="tingimused">Nõustun kasutustingimustega</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Registreeru</button>
+                </form>
+            <?php endif; ?>
         </div>
-
-        <div class="form-floating mb-3">
-            <input type="password" name="parool" class="form-control" id="parool" placeholder="Parool" required>
-            <label for="parool">Parool</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="text" name="eesnimi" class="form-control" id="eesnimi" placeholder="Eesnimi" required>
-            <label for="eesnimi">Eesnimi</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="text" name="perenimi" class="form-control" id="perenimi" placeholder="Perenimi" required>
-            <label for="perenimi">Perenimi</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <select name="sugu" class="form-select" id="sugu">
-                <option value="mees" selected>Mees</option>
-                <option value="naine">Naine</option>
-            </select>
-            <label for="sugu">Sugu</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
-            <label for="email">Email</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="text" name="telefon" class="form-control" id="telefon" placeholder="Telefon" required>
-            <label for="telefon">Telefon</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="text" name="isikukood" class="form-control" id="isikukood" placeholder="Isikukood" required>
-            <label for="isikukood">Isikukood</label>
-        </div>
-
-        <div class="form-check mb-3">
-            <input type="checkbox" name="tingimused" class="form-check-input" id="tingimused" required>
-            <label class="form-check-label" for="tingimused">Nõustun kasutustingimustega</label>
-        </div>
-
-        <button type="submit" class="btn btn-success w-100">Registreeru</button>
-    </form>
+    </div>
 </div>
 <?php include 'footer.php'; ?>

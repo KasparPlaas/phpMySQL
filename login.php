@@ -1,32 +1,42 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 include 'config.php';
 session_start();
 
-$error = '';
+$veateade = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['kasutajanimi'] ?? '');
-    $password = $_POST['parool'] ?? '';
+    $kasutajanimi = $_POST['kasutajanimi'];
+    $sisestatudParool = $_POST['parool'];
 
-    if (!$username || !$password) {
-        $error = "Palun sisestage kasutajanimi ja parool.";
+    if (empty($kasutajanimi) || empty($sisestatudParool)) {
+        $veateade = "Palun sisestage kasutajanimi ja parool.";
     } else {
-        $stmt = $yhendus->prepare("SELECT parool, roll FROM kasutajad WHERE kasutajanimi = ?");
-        $stmt->bind_param("s", $username);
+        $stmt = $yhendus->prepare("SELECT kasutaja_id, eesnimi, kasutajanimi, parool, roll FROM kasutajad WHERE kasutajanimi = ?");
+        $stmt->bind_param("s", $kasutajanimi);
         $stmt->execute();
-        $stmt->bind_result($hashedPasswordFromDb, $userRole);
-        if ($stmt->fetch()) {
-            if (password_verify($password, $hashedPasswordFromDb)) {
-                // Login success - save user info to session
-                $_SESSION['kasutajanimi'] = $username;
-                $_SESSION['roll'] = $userRole;
-                header("Location: admin/index.php"); // Redirect after login
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows === 1) {
+            $kasutaja = $result->fetch_assoc();
+
+            if (password_verify($sisestatudParool, $kasutaja['parool'])) {
+                // Set session variables
+                $_SESSION['kasutaja_id'] = $kasutaja['kasutaja_id'];
+                $_SESSION['user_id'] = $kasutaja['kasutaja_id']; // Match with other pages
+                $_SESSION['eesnimi'] = $kasutaja['eesnimi'];
+                $_SESSION['kasutajanimi'] = $kasutaja['kasutajanimi'];
+                $_SESSION['roll'] = $kasutaja['roll'];
+
+                header("Location: index.php");
                 exit;
             } else {
-                $error = "Vale parool.";
+                $veateade = "Vale kasutajanimi või parool.";
             }
         } else {
-            $error = "Kasutajanimi ei leitud.";
+            $veateade = "Vale kasutajanimi või parool.";
         }
         $stmt->close();
     }
@@ -34,29 +44,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <?php include 'header.php'; ?>
-<div class="container py-5" style="max-width: 400px;">
-    <h2 class="mb-4 text-center">Logi sisse</h2>
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+        <h3 class="text-center mb-4">Logi sisse</h3>
 
-    <?php if ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+        <?php if (!empty($veateade)) : ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($veateade) ?></div>
+        <?php endif; ?>
 
-    <form method="POST" novalidate>
-        <div class="form-floating mb-3">
-            <input type="text" name="kasutajanimi" class="form-control" id="kasutajanimi" placeholder="Kasutajanimi" required autofocus>
-            <label for="kasutajanimi">Kasutajanimi</label>
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-warning"><?= htmlspecialchars($_SESSION['error']) ?></div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label for="kasutajanimi" class="form-label">Kasutajanimi</label>
+                <input type="text" name="kasutajanimi" id="kasutajanimi" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="parool" class="form-label">Parool</label>
+                <input type="password" name="parool" id="parool" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Logi sisse</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="register.php">Loo uus konto</a>
         </div>
-
-        <div class="form-floating mb-4">
-            <input type="password" name="parool" class="form-control" id="parool" placeholder="Parool" required>
-            <label for="parool">Parool</label>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100">Logi sisse</button>
-    </form>
-
-    <div class="mt-3 text-center">
-        <a href="register.php">Loo uus konto</a>
     </div>
 </div>
 <?php include 'footer.php'; ?>

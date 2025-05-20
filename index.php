@@ -3,7 +3,7 @@
 <main>
 
   <!-- Hero Section -->
-  <section class="vh-100 d-flex align-items-center bg-dark">
+  <section class="vh-100 d-flex align-items-center bg-light position-relative">
     <div class="container">
       <div class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden">
         <img 
@@ -12,17 +12,17 @@
           class="w-100 h-100 object-fit-cover" 
           loading="lazy"
         >
-        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75"></div>
       </div>
-      <div class="position-relative text-center text-white py-5">
+      <div class="position-relative text-center text-dark py-5">
         <div class="col-lg-8 mx-auto">
           <h1 class="display-2 fw-bold mb-4">Leia oma sisemine rahu</h1>
-          <div class="lead fs-3 mb-5 text-white-75">Luxury spa kogemus Eesti parimas kuurordis</div>
+          <div class="lead fs-3 mb-5 text-dark-50">Luxury spa kogemus Eesti parimas kuurordis</div>
           <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
             <a href="book.php" class="btn btn-primary btn-lg px-5 py-3 fw-bold rounded-pill">
               <i class="bi bi-calendar-plus me-2"></i>Broneeri koht
             </a>
-            <a href="packages.php" class="btn btn-outline-light btn-lg px-5 py-3 fw-bold rounded-pill">
+            <a href="packages.php" class="btn btn-outline-primary btn-lg px-5 py-3 fw-bold rounded-pill">
               <i class="bi bi-gift me-2"></i>Paketid
             </a>
           </div>
@@ -39,7 +39,6 @@
           <span class="badge bg-primary bg-opacity-10 text-primary-emphasis fs-6 mb-3 rounded-pill px-4 py-2">Tere tulemast</span>
           <h2 class="display-4 fw-bold mb-4">Avasta Spaahotelli</h2>
           <p class="lead text-body-secondary mb-5">Elamused, mis jätavad igaveseks mulje. Pakume eksklusiivseid pakette romantikale, puhkusele, spaale ja sünnipäevadeks.</p>
-          
           <div class="d-flex flex-column flex-sm-row gap-3">
             <a href="#packages" class="btn btn-primary px-4 py-3 rounded-pill">Vaata pakette</a>
             <a href="contact.php" class="btn btn-outline-primary px-4 py-3 rounded-pill">Kontakt</a>
@@ -113,7 +112,7 @@
                   style="height: 250px" 
                   alt="<?= htmlspecialchars($offer['title']) ?>"
                 >
-                <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-75 text-white">
+                <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-white bg-opacity-75 text-dark">
                   <div class="d-flex justify-content-between align-items-center">
                     <h3 class="h5 mb-0"><?= htmlspecialchars($offer['title']) ?></h3>
                     <span class="badge bg-primary rounded-pill px-3"><?= $offer['price'] ?>€</span>
@@ -190,16 +189,18 @@
   </section>
 
   <!-- CTA Section -->
-  <section class="py-5 bg-primary bg-gradient text-white">
+  <section class="py-3 bg-light ">
     <div class="container py-5">
       <div class="text-center">
-        <h2 class="display-4 fw-bold mb-4">Kas olete valmis lõõgastuma?</h2>
-        <p class="lead text-white-75 mb-5 mx-auto" style="max-width: 600px">Broneerige oma spaapäev juba täna ja naudige erilist rahu</p>
-        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-          <a href="book.php" class="btn btn-light btn-lg px-5 py-3 fw-bold rounded-pill">
+        <h2 class="display-5 fw-bold mb-4 text-primary">Kas olete valmis lõõgastuma?</h2>
+        <p class="lead text-body-secondary mb-5 mx-auto" style="max-width: 600px;">
+          Broneerige oma spaapäev juba täna ja nautige erakordset rahu ja hoolitsust.
+        </p>
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+          <a href="book.php" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
             <i class="bi bi-calendar-plus me-2"></i>Broneeri koht
           </a>
-          <a href="tel:+37255667788" class="btn btn-outline-light btn-lg px-5 py-3 fw-bold rounded-pill">
+          <a href="tel:+37255667788" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill">
             <i class="bi bi-telephone me-2"></i>+372 5566 7888
           </a>
         </div>
