@@ -1,20 +1,7 @@
 <?php
-
-    session_start();
-
-
-
-
-
-    if (!isset($_SESSION['tuvastamine'])) {
-        header('Location: login.php');
-        exit();
-    }
- 
-    if(isset($_SESSION['tuvastamine'])){
-        session_destroy();
-        header('Location: login.php');
-        exit();
-    }  
-
+session_start();
+session_destroy();
+setcookie('remember', '', time() - 3600, '/');
+header('Location: index.php');
+exit;
 ?>
