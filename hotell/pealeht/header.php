@@ -4,9 +4,8 @@ include_once '../kasutaja/session.php';
 $hotelli_nimi = "Eesti Hotell";
 $navigatsiooni_menuu = [
     "Avaleht" => "../pealeht/index.php",
-    "Toad" => "#toad",
-    "Teenused" => "#teenused",
-    "Kontakt" => "#kontakt"
+    "Teenused" => "../pealeht/index.php#teenused",
+    "Kontakt" => "../pealeht/index.php#kontakt"
 ];
 ?>
 <!DOCTYPE html>
@@ -26,7 +25,7 @@ $navigatsiooni_menuu = [
         <div class="container">
             <!-- Logo/bränd -->
             <a class="navbar-brand fw-bold text-primary" href="../pealeht/index.php">
-                <i class="bi bi-building me-2"></i><?php echo $hotelli_nimi; ?>
+            <img src="../pildid/logo.png" alt="Hotelli Logo" class="d-inline-block align-text-top me-2" style="width: 180px; height: 50px;">  
             </a>
             
             <!-- Mobiilse menüü nupp -->

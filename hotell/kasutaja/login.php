@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container-fluid d-flex align-items-center justify-content-center" style="min-height: 85vh;">
     <div class="row w-100 justify-content-center">
         <div class="col-11 col-sm-8 col-md-6 col-lg-4">
-            <div class="card shadow border-0 rounded-4">
+            <div class="card shadow border-0 rounded-4 mt-5">
                 <div class="card-body p-4 p-md-5">
                     
                     <!-- Header Section -->
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="bi bi-person-lock text-white" style="font-size: 1.8rem;"></i>
                         </div>
                         <h1 class="h3 fw-bold text-dark mb-2">Tere tulemast tagasi!</h1>
-                        <p class="text-muted mb-0">Sisestage oma andmed sisselogimiseks</p>
+                        <p class="text-muted mb-0">Sisestage oma andmed sisselogimiseks </p>
                     </div>
 
                     <!-- Error Message -->
@@ -170,6 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="bi bi-shield-check me-1"></i>
                     Teie andmed on kaitstud ja turvalised
                 </small>
+                <img src="../pildid/login.gif" alt="Security Image" class="img-fluid mt-3 mb-3" style="max-width: 200px;">
             </div>
         </div>
     </div>

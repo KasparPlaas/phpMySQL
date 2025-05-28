@@ -7,7 +7,7 @@
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold text-dark mb-4">Tere tulemast Eesti Hotelli!</h1>
                     <p class="lead mb-4 text-muted">Meie hubane hotell asub südamlik kesklinnas ja pakub kvaliteetset majutust sõbralige hindadega. Kogege Eesti külalislahkust meie professionaalse teenindusega.</p>
-                    <div class="d-flex gap-3 flex-wrap">
+                    <div class="d-flex gap-3 flex-wrap mb-3">
                         <button class="btn btn-dark btn-lg" onclick="scrollToSection('broneerimine')">
                             <i class="bi bi-calendar-check"></i> Alusta broneerimist
                         </button>
@@ -66,7 +66,7 @@
     <section id="miks" class="bg-white py-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 mb-3">
                     <h2 class="display-5 fw-bold mb-4 text-dark">Miks meid valida?</h2>
                     <div class="row g-3">
                         <div class="col-12">
@@ -373,7 +373,7 @@
                                     <i class="bi bi-person text-white"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0 text-dark">Peeter Saar</h6>
+                                    <h6 class="mb-0 text-dark">Peeter Paan</h6>
                                     <small class="text-muted">Tartu</small>
                                 </div>
                             </div>

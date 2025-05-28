@@ -261,45 +261,62 @@ if (!file_exists('../pealeht/header.php')) {
 }
 ?>
 
-<div class="container-fluid mt-4">
-    <div class="row">
+<div class="container-fluid py-4">
+    <div class="row g-4">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 text-primary">
-                    <i class="fas fa-calendar-check me-2"></i>Broneeringute Haldus
-                </h1>
-                <div class="badge bg-info fs-6">
-                    Sisselogitud: <?php echo htmlspecialchars($praegune_kasutaja ?? 'Unknown'); ?> (<?php echo htmlspecialchars($kasutaja_roll ?? 'Unknown'); ?>)
+            <!-- Header with user info -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+                <div>
+                    <h1 class="h2 fw-bold text-gradient text-primary mb-1">
+                        <i class="fas fa-calendar-check me-2"></i>Broneeringute Haldus
+                    </h1>
+                    <p class="text-muted mb-0">Halda kõiki broneeringuid ühes kohas</p>
+                </div>
+                <div class="d-flex align-items-center gap-2 bg-light rounded-3 p-3 shadow-sm">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 fw-semibold"><?php echo htmlspecialchars($praegune_kasutaja ?? 'Unknown'); ?></p>
+                        <span class="badge bg-info bg-opacity-15 text-info fs-6"><?php echo htmlspecialchars($kasutaja_roll ?? 'Unknown'); ?></span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Display messages -->
+            <!-- Messages -->
             <?php if (!empty($teade)): ?>
-                <div class="alert alert-<?php echo $teade_tyyp; ?> alert-dismissible fade show" role="alert">
-                    <?php echo htmlspecialchars($teade); ?>
+                <div class="alert alert-dismissible fade show alert-<?php echo $teade_tyyp; ?> shadow-sm mb-4" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas <?php echo $teade_tyyp === 'success' ? 'fa-check-circle' : ($teade_tyyp === 'danger' ? 'fa-exclamation-circle' : 'fa-info-circle'); ?>"></i>
+                        <span><?php echo htmlspecialchars($teade); ?></span>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
 
-            <!-- Search and filter form -->
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-search me-2"></i>Otsing ja Filtreerimine
+            <!-- Search and filter card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-0 py-3">
+                    <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                        <i class="fas fa-sliders-h text-primary"></i>
+                        <span>Otsi ja filtreeri</span>
                     </h5>
                 </div>
-                <div class="card-body">
-                    <form method="GET" class="row g-3">
+                <div class="card-body pt-0">
+                    <form method="GET" class="row gy-3 gx-4">
                         <div class="col-md-3">
-                            <label for="otsing" class="form-label">Otsing</label>
-                            <input type="text" class="form-control" id="otsing" name="otsing" 
-                                   value="<?php echo htmlspecialchars($otsing); ?>" 
-                                   placeholder="Kasutajanimi, toa info...">
+                            <label for="otsing" class="form-label small fw-semibold text-muted">Otsing</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="otsing" name="otsing" 
+                                       value="<?php echo htmlspecialchars($otsing); ?>" 
+                                       placeholder="Kasutaja, tuba...">
+                            </div>
                         </div>
                         <div class="col-md-2">
-                            <label for="staatus" class="form-label">Staatus</label>
+                            <label for="staatus" class="form-label small fw-semibold text-muted">Staatus</label>
                             <select class="form-select" id="staatus" name="staatus">
-                                <option value="">Kõik</option>
+                                <option value="">Kõik staatused</option>
                                 <option value="töötlemisel" <?php echo $staatus_filter === 'töötlemisel' ? 'selected' : ''; ?>>Töötlemisel</option>
                                 <option value="makstud" <?php echo $staatus_filter === 'makstud' ? 'selected' : ''; ?>>Makstud</option>
                                 <option value="aktsepteeritud" <?php echo $staatus_filter === 'aktsepteeritud' ? 'selected' : ''; ?>>Aktsepteeritud</option>
@@ -308,84 +325,93 @@ if (!file_exists('../pealeht/header.php')) {
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label for="kuupaev_alates" class="form-label">Alates</label>
-                            <input type="date" class="form-control" id="kuupaev_alates" name="kuupaev_alates" 
-                                   value="<?php echo htmlspecialchars($kuupaev_alates); ?>">
+                            <label for="kuupaev_alates" class="form-label small fw-semibold text-muted">Alates</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-calendar-day text-muted"></i></span>
+                                <input type="date" class="form-control" id="kuupaev_alates" name="kuupaev_alates" 
+                                       value="<?php echo htmlspecialchars($kuupaev_alates); ?>">
+                            </div>
                         </div>
                         <div class="col-md-2">
-                            <label for="kuupaev_kuni" class="form-label">Kuni</label>
-                            <input type="date" class="form-control" id="kuupaev_kuni" name="kuupaev_kuni" 
-                                   value="<?php echo htmlspecialchars($kuupaev_kuni); ?>">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">&nbsp;</label>
-                            <div class="d-grid gap-2 d-md-flex">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search me-1"></i>Otsi
-                                </button>
-                                <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="btn btn-outline-secondary">
-                                    <i class="fas fa-refresh me-1"></i>Tühista
-                                </a>
+                            <label for="kuupaev_kuni" class="form-label small fw-semibold text-muted">Kuni</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-calendar-day text-muted"></i></span>
+                                <input type="date" class="form-control" id="kuupaev_kuni" name="kuupaev_kuni" 
+                                       value="<?php echo htmlspecialchars($kuupaev_kuni); ?>">
                             </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end gap-2">
+                            <button type="submit" class="btn btn-primary px-4 flex-grow-1">
+                                <i class="fas fa-search me-2"></i>Otsi
+                            </button>
+                            <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="btn btn-outline-secondary px-3">
+                                <i class="fas fa-undo me-1"></i>
+                            </a>
                         </div>
                     </form>
                 </div>
             </div>
 
             <!-- Bookings table -->
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-list me-2"></i>Broneeringud
-                    </h5>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                            <i class="fas fa-list text-primary"></i>
+                            <span>Broneeringud</span>
+                        </h5>
+                        <div class="text-muted small">
+                            <i class="fas fa-info-circle me-1"></i>Kokku: <?php echo mysqli_num_rows($tulemus); ?> broneeringut
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <?php if ($tulemus && mysqli_num_rows($tulemus) > 0): ?>
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
                                     <tr>
-                                        <th>ID</th>
+                                        <th class="ps-4">ID</th>
                                         <th>Kasutaja</th>
                                         <th>Tuba</th>
-                                        <th>Saabumine</th>
-                                        <th>Lahkumine</th>
-                                        <th>Staatus</th>
-                                        <th>Hind</th>
-                                        <th>Maksmisviis</th>
-                                        <th>Loodud</th>
+                                        <th>Kuupäevad</th>
+                                        <th class="text-center">Staatus</th>
+                                        <th class="text-end pe-4">Hind</th>
                                         <th>Toimingud</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php while ($rida = mysqli_fetch_assoc($tulemus)): ?>
-                                        <tr id="rida_<?php echo $rida['broneering_id']; ?>">
-                                            <td><strong>#<?php echo $rida['broneering_id']; ?></strong></td>
-                                            <td><?php echo htmlspecialchars($rida['kasutajanimi'] ?? 'N/A'); ?></td>
+                                        <tr id="rida_<?php echo $rida['broneering_id']; ?>" class="<?php echo $rida['staatus'] === 'tühistatud' ? 'opacity-75' : ''; ?>">
+                                            <td class="ps-4 fw-semibold">#<?php echo $rida['broneering_id']; ?></td>
                                             <td>
-                                                <?php 
-                                                // Display room information based on available columns
-                                                $room_info = [];
-                                                if (isset($rida['toa_number']) && !empty($rida['toa_number'])) {
-                                                    $room_info[] = htmlspecialchars($rida['toa_number']);
-                                                } elseif (isset($rida['number']) && !empty($rida['number'])) {
-                                                    $room_info[] = htmlspecialchars($rida['number']);
-                                                } else {
-                                                    $room_info[] = "Tuba #" . $rida['toa_id'];
-                                                }
-                                                
-                                                echo implode(' ', $room_info);
-                                                
-                                                // Display room name if available
-                                                $room_name = $rida['toa_nimi'] ?? $rida['nimi'] ?? null;
-                                                if (!empty($room_name)): 
-                                                ?>
-                                                    <br><small class="text-muted"><?php echo htmlspecialchars($room_name); ?></small>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 d-flex align-items-center justify-content-center">
+                                                        <i class="fas fa-user text-primary fs-6"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-medium"><?php echo htmlspecialchars($rida['kasutajanimi'] ?? 'N/A'); ?></div>
+                                                        <small class="text-muted"><?php echo date('d.m.Y H:i', strtotime($rida['loodud'])); ?></small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="fw-medium"><?php 
+                                                    // Fix for undefined "nimi" warning
+                                                    $roomNumber = $rida['toa_number'] ?? $rida['number'] ?? 'Tuba #' . $rida['toa_id'];
+                                                    echo htmlspecialchars($roomNumber); 
+                                                ?></div>
+                                                <?php if (!empty($rida['toa_nimi'] ?? ($rida['nimi'] ?? ''))): ?>
+                                                    <small class="text-muted"><?php echo htmlspecialchars($rida['toa_nimi'] ?? $rida['nimi']); ?></small>
                                                 <?php endif; ?>
                                             </td>
-                                            <td><?php echo $rida['saabumine'] ? date('d.m.Y', strtotime($rida['saabumine'])) : 'N/A'; ?></td>
-                                            <td><?php echo $rida['lahkumine'] ? date('d.m.Y', strtotime($rida['lahkumine'])) : 'N/A'; ?></td>
                                             <td>
+                                                <div class="d-flex flex-column">
+                                                    <span class="fw-medium"><?php echo date('d.m.Y', strtotime($rida['saabumine'])); ?></span>
+                                                    <small class="text-muted"><?php echo date('d.m.Y', strtotime($rida['lahkumine'])); ?></small>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
                                                 <?php
                                                 $staatus_klassid = [
                                                     'töötlemisel' => 'warning',
@@ -396,41 +422,36 @@ if (!file_exists('../pealeht/header.php')) {
                                                 ];
                                                 $klass = $staatus_klassid[$rida['staatus']] ?? 'secondary';
                                                 ?>
-                                                <span class="badge bg-<?php echo $klass; ?>">
+                                                <span class="badge rounded-pill bg-<?php echo $klass; ?> bg-opacity-15 text-<?php echo $klass; ?> py-2 px-3">
                                                     <?php echo ucfirst($rida['staatus'] ?? 'N/A'); ?>
                                                 </span>
                                             </td>
-                                            <td><strong><?php echo number_format($rida['hind_kokku'] ?? 0, 0, ',', ' '); ?>€</strong></td>
-                                            <td>
-                                                <span class="badge bg-light text-dark">
+                                            <td class="text-end pe-4 fw-bold">
+                                                <?php echo number_format($rida['hind_kokku'] ?? 0, 0, ',', ' '); ?>€
+                                                <div class="small text-muted fw-normal">
                                                     <?php echo ucfirst($rida['maksmisviis'] ?? 'N/A'); ?>
-                                                </span>
+                                                </div>
                                             </td>
-                                            <td><?php echo $rida['loodud'] ? date('d.m.Y H:i', strtotime($rida['loodud'])) : 'N/A'; ?></td>
                                             <td>
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <button type="button" class="btn btn-outline-primary" 
+                                                <div class="d-flex gap-2">
+                                                    <button type="button" class="btn btn-sm btn-icon btn-outline-primary rounded-3" 
                                                             onclick="muudaBroneeringut(<?php echo $rida['broneering_id']; ?>)"
-                                                            title="Muuda">
-                                                        <i class="fas fa-edit"></i>
+                                                            data-bs-toggle="tooltip" title="Muuda">
+                                                        <i class="fas fa-pencil-alt"></i>
                                                     </button>
+                                                    
                                                     <?php if (in_array($rida['staatus'], ['töötlemisel', 'makstud'])): ?>
-                                                        <button type="button" class="btn btn-outline-success" 
+                                                        <button type="button" class="btn btn-sm btn-icon btn-outline-success rounded-3" 
                                                                 onclick="muudaStaatust(<?php echo $rida['broneering_id']; ?>, 'aktsepteeritud', <?php echo $rida['kasutaja_id']; ?>, <?php echo $rida['toa_id']; ?>, '<?php echo $rida['saabumine']; ?>', '<?php echo $rida['lahkumine']; ?>', <?php echo $rida['hind_kokku']; ?>, '<?php echo $rida['maksmisviis']; ?>')"
-                                                                title="Aktsepteeri">
+                                                                data-bs-toggle="tooltip" title="Aktsepteeri">
                                                             <i class="fas fa-check"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-outline-danger" 
+                                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger rounded-3" 
                                                                 onclick="muudaStaatust(<?php echo $rida['broneering_id']; ?>, 'tühistatud', <?php echo $rida['kasutaja_id']; ?>, <?php echo $rida['toa_id']; ?>, '<?php echo $rida['saabumine']; ?>', '<?php echo $rida['lahkumine']; ?>', <?php echo $rida['hind_kokku']; ?>, '<?php echo $rida['maksmisviis']; ?>')"
-                                                                title="Tühista">
+                                                                data-bs-toggle="tooltip" title="Tühista">
                                                             <i class="fas fa-times"></i>
                                                         </button>
                                                     <?php endif; ?>
-                                                    <button type="button" class="btn btn-outline-danger" 
-                                                            onclick="kustutaBroneering(<?php echo $rida['broneering_id']; ?>)"
-                                                            title="Kustuta">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -440,9 +461,14 @@ if (!file_exists('../pealeht/header.php')) {
                         </div>
                     <?php else: ?>
                         <div class="text-center py-5">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">Broneeringuid ei leitud</h5>
-                            <p class="text-muted">Proovige muuta otsingufiltrit või kontrollige andmebaasi ühendust</p>
+                            <div class="py-4 my-3">
+                                <i class="fas fa-calendar-times fa-4x text-light mb-4"></i>
+                                <h4 class="fw-semibold text-muted mb-3">Broneeringuid ei leitud</h4>
+                                <p class="text-muted mb-4">Proovige muuta otsingufiltreid või lisada uus broneering</p>
+                                <button class="btn btn-primary px-4">
+                                    <i class="fas fa-plus me-2"></i>Lisa uus broneering
+                                </button>
+                            </div>
                         </div>
                     <?php endif; ?>
                 </div>

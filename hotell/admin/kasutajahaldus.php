@@ -106,9 +106,9 @@ include '../pealeht/header.php';
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<div class="container mt-4">
+<div class="container mt-4 mb-4">
     <div class="row">
-        <div class="col-12">
+        <div class="col-16">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="text-dark">Kasutajahaldus</h2>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#lisaKasutajaModal">
@@ -164,11 +164,11 @@ include '../pealeht/header.php';
                                         <td><?php echo htmlspecialchars($kasutaja['sugu']); ?></td>
                                         <td><?php echo htmlspecialchars($kasutaja['isikukood']); ?></td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-primary me-1" 
+                                            <button type="button" class="btn btn-sm btn-primary me-3 mb-1 mt-1" 
                                                     onclick="muudaKasutaja(<?php echo $kasutaja['kasutaja_id']; ?>, '<?php echo htmlspecialchars($kasutaja['kasutajanimi']); ?>', '<?php echo htmlspecialchars($kasutaja['roll']); ?>', '<?php echo htmlspecialchars($kasutaja['eesnimi']); ?>', '<?php echo htmlspecialchars($kasutaja['perenimi']); ?>', '<?php echo htmlspecialchars($kasutaja['sugu']); ?>', '<?php echo htmlspecialchars($kasutaja['isikukood']); ?>')">
                                                 Muuda
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            <button type="button" class="btn btn-sm btn-outline-danger mb-1 mt-1" 
                                                     onclick="kustutaKasutaja(<?php echo $kasutaja['kasutaja_id']; ?>, '<?php echo htmlspecialchars($kasutaja['kasutajanimi']); ?>')">
                                                 Kustuta
                                             </button>
@@ -360,8 +360,6 @@ include '../pealeht/header.php';
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 // Kasutaja kustutamise funktsioon

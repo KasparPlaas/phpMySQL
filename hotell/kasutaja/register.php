@@ -100,7 +100,7 @@ include '../pealeht/header.php';
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow">
+            <div class="card shadow mb-5">
                 <div class="card-header bg-primary text-white text-center">
                     <h3><i class="bi bi-person-plus"></i> Loo Uus Konto</h3>
                 </div>
